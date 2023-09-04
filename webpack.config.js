@@ -53,7 +53,6 @@ module.exports = {
                 use: [
                     {
                         loader: 'image-webpack-loader',
-                        loader: 'image-webpack-loader',
                         options: {
                             mozjpeg: {
                             progressive: true,
@@ -77,9 +76,10 @@ module.exports = {
                     }
                 ],
                 type: 'asset/resource',
-                // generator: {
-                //     filename: 'images/[name][ext]'
-                // }
+                generator: {
+                    // filename: 'images/[name][ext]'
+                    filename: 'images/[hash][ext][query]'
+                }
             },
 
             {
