@@ -18,6 +18,7 @@ module.exports = {
     entry: [ 
         '@babel/polyfill',
         path.resolve(__dirname, 'src/js', 'main.js'),
+        // path.resolve(__dirname, './src/db', 'db.json'),
     ],
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -27,7 +28,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, 'src', 'index.html')
+            template: path.resolve(__dirname, 'src', 'index.html'),
         }),
         new MiniCssExtractPlugin({
             filename: '[name].[contenthash].css',
