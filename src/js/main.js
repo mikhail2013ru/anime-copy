@@ -1,4 +1,4 @@
-import '../index.html'
+// import '../index.html'
 import '../css/font-awesome.min.css'
 import '../css/bootstrap.min.css'
 import '../css/elegant-icons.css'
