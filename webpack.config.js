@@ -23,7 +23,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist'),
         clean: true,
-        filename: '[name].[contenthash].js',
+        filename: '[name].js',
         // assetModuleFilename: 'assets/[name][ext]'
     },
     plugins: [
