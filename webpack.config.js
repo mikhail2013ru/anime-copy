@@ -1,8 +1,10 @@
 const path = require('path')
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const miniCss = require("mini-css-extract-plugin")
+const CopyPlugin = require("copy-webpack-plugin")
 
-const mode = process.env.NODE_ENV || 'development'
+const mode = process.env.NODE_ENV || 'development' 
 const devMode = mode === 'development'
 const target = devMode ? 'web' : 'browserslist'
 const devtool = devMode ? 'source-map' : undefined
@@ -11,43 +13,44 @@ module.exports = {
     mode,
     target,
     devtool,
-    devServer: {
-        open: true,
-        hot: true,
+    entry: {
+        main: './src/js/index.js'
     },
-    entry: [ 
-        '@babel/polyfill',
-        path.resolve(__dirname, 'src/js', 'main.js'),
-    ],
     output: {
         path: path.resolve(__dirname, 'dist'),
         clean: true,
-        filename: '[name].js',
+        filename: 'js/[name].js',
+        sourceMapFilename: "js/[name].js.map",
+        // chunkFilename: '[id].[chunkhash].js'
         // assetModuleFilename: 'assets/[name][ext]'
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, 'src', 'index.html'),
-        }),
-        new MiniCssExtractPlugin({
-            filename: '[name].[contenthash].css',
-        })
-    ],
+    devServer: {
+        static: {
+          directory: path.join(__dirname, 'dist'),
+        },
+        compress: true,
+        port: 9000,
+        hot: true,
+        open: true
+    },
     module: {
         rules: [
             {
-                test: /\.html$/i,
-                loader: "html-loader",
+                test: /\.(c|sa|sc)ss$/i,
+                use: [
+                    devMode ? "style-loader" : miniCss.loader,    
+                    // miniCss.loader,
+                    "css-loader",
+                    "sass-loader"
+                ],
             },
-
             {
-                test: /\.(woff2?|ttf|eot)$/i,
+                test: /\.(woff2?|ttf|eot|otf)$/i,
                 type: 'asset/resource',
                 generator: {
                     filename: 'fonts/[name][ext]'
                 }
             },
-
             {
                 test: /\.(jpe?g|png|webp|gif|svg)?$/i,
                 use: [
@@ -78,42 +81,34 @@ module.exports = {
                 type: 'asset/resource',
                 generator: {
                     // filename: 'images/[name][ext]'
-                    filename: 'images/[hash][ext][query]'
+                    // filename: 'img/[hash][ext][query]'
+                    filename: 'img/[name][ext]'
                 }
             },
-
-            {
-                test: /\.(c|sa|sc)ss$/i,
-                use: [
-                  // Creates `style` nodes from JS strings
-                  devMode ? "style-loader" : MiniCssExtractPlugin.loader,                  
-                  // Translates CSS into CommonJS
-                  "css-loader",
-                  {
-                    loader: 'postcss-loader',
-                    options: {
-                        postcssOptions: {
-                            plugins: [require('postcss-preset-env')],
-                        }
-                    }
-                  },
-                  // Compiles Sass to CSS
-                  "sass-loader",
-                ],
-            },
-
-            {
-                test: /\.(?:js|mjs|cjs)$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: [
-                            ['@babel/preset-env', { targets: "defaults" }]
-                        ]
-                    }
-                }
-            }
         ],
     },
+    devtool: false,
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: path.resolve(__dirname, 'src', 'index.html'),
+        }),
+        new miniCss({
+            filename: 'css/style.css',
+        }),
+        new webpack.SourceMapDevToolPlugin({
+            filename: '[file].map[query]',
+            exclude: ['vendor.js'],
+        }),
+        new CopyPlugin({
+            patterns: [
+              { from: "src/img", to: "img" },
+              { from: "src/fonts", to: "fonts" },
+              { from: "src/css/font-awesome.css", to: "css" },
+              { from: "src/css/elegant-icons.css", to: "css" },
+              { from: "src/login.html", to: "login.html" },
+              { from: "src/categories.html", to: "categories.html" },
+              { from: "src/anime-details.html", to: "anime-details.html" },
+            ],
+        }),
+    ],
 }

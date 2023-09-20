@@ -1,4 +1,4 @@
-fetch('../db/db.json')
+fetch('https://anime-b58d4-default-rtdb.firebaseio.com/anime.json')
     .then((response) => {
         return response.json()
     })
