@@ -45,6 +45,8 @@ module.exports = {
                 ],
             },
             {
+                // test: /\.woff2?$/i,
+                // test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
                 test: /\.(woff2?|ttf|eot|otf)$/i,
                 type: 'asset/resource',
                 generator: {

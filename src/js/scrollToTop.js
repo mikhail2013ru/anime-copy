@@ -1,10 +1,14 @@
-const topBtn = document.querySelector('#scrollToTopButton')
-
-topBtn.addEventListener('click', (e) => {
-    e.preventDefault()
-
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+const scrollToTop = () => {
+    const topBtn = document.querySelector('#scrollToTopButton')
+    
+    topBtn.addEventListener('click', (e) => {
+        e.preventDefault()
+    
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        })
     })
-})
+}
+
+export default scrollToTop
