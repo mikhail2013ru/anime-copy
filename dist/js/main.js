@@ -2731,13 +2731,47 @@ const modal = () => {
     const modal = document.querySelector('.search-model')
     const modalBtn = document.querySelector('.icon_search')
     const modalClose = document.querySelector('.search-close-switch')
-    
+    const searchInput = document.querySelector('#search-input')
+    const wrapper = document.querySelector('.search-model-result')
+
+    wrapper.style.width = '100%'
+    wrapper.style.maxWidth = '500px'
+
+    const renderFunc = (items) => {
+        wrapper.innerHTML = ''
+
+        items.forEach(item => {
+            wrapper.insertAdjacentHTML('afterbegin', `
+                <a class="p-2" href="/anime-details.html">${item.title}</a>
+            `)
+        });
+    }
+
+    const searchFunc = (searchStr) => {
+        fetch('https://anime-b58d4-default-rtdb.firebaseio.com/anime.json')
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                const filteredData = data.filter(dataItem => {
+                    return dataItem.title.toLowerCase().includes(searchStr.toLowerCase()) || dataItem.description.toLowerCase().includes(searchStr.toLowerCase())
+                })
+                
+                const result = filteredData.slice(0, 5)    
+                renderFunc(result)
+            })
+    }
+
     modalBtn.addEventListener('click', () => {
         modal.classList.add('search-model--active')
     })
-    
+
     modalClose.addEventListener('click', () => {
         modal.classList.remove('search-model--active')
+    })
+
+    searchInput.addEventListener('input', (e) => {
+        searchFunc(e.target.value)
     })
 }
 
@@ -12804,6 +12838,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scrollToTop_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./scrollToTop.js */ "./src/js/scrollToTop.js");
 /* harmony import */ var _slider_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./slider.js */ "./src/js/slider.js");
 /* harmony import */ var _sass_style_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../sass/style.scss */ "./src/sass/style.scss");
+// import '../index.html'
+
 
 
 

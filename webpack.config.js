@@ -21,7 +21,6 @@ module.exports = {
         clean: true,
         filename: 'js/[name].js',
         sourceMapFilename: "js/[name].js.map",
-        // chunkFilename: '[id].[chunkhash].js'
         // assetModuleFilename: 'assets/[name][ext]'
     },
     devServer: {
@@ -35,26 +34,28 @@ module.exports = {
     },
     module: {
         rules: [
+            // {
+            //     test: /\.html$/i,
+            //     loader: 'html-loader',
+            // },
             {
                 test: /\.(c|sa|sc)ss$/i,
                 use: [
                     devMode ? "style-loader" : miniCss.loader,    
-                    // miniCss.loader,
                     "css-loader",
                     "sass-loader"
                 ],
             },
+            // {
+            //     test: /\.(woff2?|ttf|eot|otf|svg)$/i,
+            //     type: 'asset/resource',
+            //     generator: {
+            //         filename: 'fonts/[name][ext]'
+            //     }
+            // },
             {
-                // test: /\.woff2?$/i,
-                // test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-                test: /\.(woff2?|ttf|eot|otf)$/i,
-                type: 'asset/resource',
-                generator: {
-                    filename: 'fonts/[name][ext]'
-                }
-            },
-            {
-                test: /\.(jpe?g|png|webp|gif|svg)?$/i,
+                // test: /\.(jpe?g|png|webp|gif|svg)?$/i,
+                test: /\.(jpg|png|webp|gif|svg)$/i,
                 use: [
                     {
                         loader: 'image-webpack-loader',
@@ -82,8 +83,6 @@ module.exports = {
                 ],
                 type: 'asset/resource',
                 generator: {
-                    // filename: 'images/[name][ext]'
-                    // filename: 'img/[hash][ext][query]'
                     filename: 'img/[name][ext]'
                 }
             },
@@ -93,6 +92,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'src', 'index.html'),
+            // template: require('./src/index.html')
         }),
         new miniCss({
             filename: 'css/style.css',

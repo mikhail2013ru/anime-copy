@@ -13,7 +13,7 @@ const modal = () => {
 
         items.forEach(item => {
             wrapper.insertAdjacentHTML('afterbegin', `
-                <a class="p-2" href="/anime-details.html">${item.title}</a>
+                <a class="p-2" href="/anime-details.html" target="_blank">${item.title}</a>
             `)
         });
     }
@@ -35,10 +35,13 @@ const modal = () => {
 
     modalBtn.addEventListener('click', () => {
         modal.classList.add('search-model--active')
+        searchInput.focus()
     })
 
     modalClose.addEventListener('click', () => {
         modal.classList.remove('search-model--active')
+        searchInput.value = ''
+        wrapper.innerHTML = ''
     })
 
     searchInput.addEventListener('input', (e) => {

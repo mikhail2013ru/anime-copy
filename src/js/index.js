@@ -1,3 +1,5 @@
+// import '../index.html'
+
 import bgElements from './bg-elements.js'
 import mainData from './mainData.js'
 import preloader from './preloader.js'
