@@ -6,6 +6,7 @@ import preloader from './preloader.js'
 import modal from './modal.js'
 import scrollToTop from './scrollToTop.js'
 import slider from './slider.js'
+import categoriesData from './categoriesData.js'
 import '../sass/style.scss'
 
 bgElements()
@@ -14,3 +15,4 @@ preloader()
 modal()
 scrollToTop()
 slider()
+categoriesData()
