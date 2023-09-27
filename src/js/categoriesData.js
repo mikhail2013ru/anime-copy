@@ -171,7 +171,7 @@ const categoriesData = () => {
             const ganreParams = new URLSearchParams(window.location.search).get('ganre')
             const itemId = new URLSearchParams(window.location.search).get('itemId')
 
-            console.log(itemId);
+            console.log(ganreParams);
 
             data.forEach((item) => {
                 ganres.add(item.ganre)
@@ -181,7 +181,7 @@ const categoriesData = () => {
 
             if (ganreParams || itemId) {
                 renderAnimeDetails(data, [itemId]);
-                console.log(data);
+                // console.log(data);
             } else {
                 console.log('Аниме отсутствует!');
             }
