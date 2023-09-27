@@ -2659,81 +2659,104 @@ const bgElements = () => {
 
 /***/ }),
 
-/***/ "./src/js/mainData.js":
-/*!****************************!*\
-  !*** ./src/js/mainData.js ***!
-  \****************************/
+/***/ "./src/js/categoriesData.js":
+/*!**********************************!*\
+  !*** ./src/js/categoriesData.js ***!
+  \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-const mainData = () => {
+const categoriesData = () => {
+    const renderGanreList = (ganres) => {
+        const dropdownBlock = document.querySelector('.header__menu .dropdown')
+
+        ganres.forEach(ganre => {
+            dropdownBlock.insertAdjacentHTML('beforeend', `
+                <li>
+                    <a href="./categories.html?ganre=${ganre}">${ganre}</a>
+                </li>
+            `)
+        })
+    }
+
+    const renderAnimeDetails = (array, itemId) => {
+        const animeObj = array.find(item => item.id == itemId)
+    }
+
     const renderAnimeList = (array, ganres) => {
         const wrapper = document.querySelector('.product .col-lg-8')
-        wrapper.innerHTML = ''
-
-        ganres.forEach((ganreItem) => {
-            const productBlock = document.createElement('div')
-            const listBlock = document.createElement('div')
-            const list = array.filter(item => item.ganre === ganreItem)
-            console.log(list);
-
-            listBlock.classList.add('row')
-            productBlock.insertAdjacentHTML('afterbegin', `
-                <div class="row">
-                    <div class="col-lg-8 col-md-8 col-sm-8">
-                        <div class="section-title">
-                            <h4>${ganreItem}</h4>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4">
-                        <div class="btn__all">
-                            <a href="/categories.html" class="primary-btn">View All <span class="arrow_right"></span></a>
-                        </div>
-                    </div>
-                </div>
-            `)
-
-            list.forEach(item => {
-                console.log(item);
-                listBlock.insertAdjacentHTML('afterbegin', `
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="${item.image}">
-                                <div class="ep">${item.rating} / 10</div>
-                                <div class="view"><i class="fa fa-eye"></i> ${item.views}</div>
+       
+        if (wrapper) {    
+            ganres.forEach((ganreItem) => {
+                const productBlock = document.createElement('div')
+                const listBlock = document.createElement('div')
+                // const list = array.filter(item => item.ganre === ganreItem)
+                const list = array.filter(item => item.tags.includes(ganreItem))
+    
+                listBlock.classList.add('row')
+                productBlock.classList.add('mb-5')
+                productBlock.insertAdjacentHTML('beforeend', `
+                    <div class="row">
+                        <div class="col-lg-8 col-md-8 col-sm-8">
+                            <div class="section-title">
+                                <h4>${ganreItem}</h4>
                             </div>
-                            <div class="product__item__text">
-                                <ul>
-                                    <li>Active</li>
-                                    <li>Movie</li>
-                                </ul>
-                                <h5><a href="/anime-details.html">${item.title}</a></h5>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="btn__all">
+                                <a href="/categories.html?ganre=${ganreItem}" class="primary-btn">View All <span class="arrow_right"></span></a>
                             </div>
                         </div>
                     </div>
                 `)
+    
+                list.forEach(item => {
+                    const tagsBlock = document.createElement('ul')
+    
+                    item.tags.forEach(tag => {
+                        tagsBlock.insertAdjacentHTML('beforeend', `
+                            <li>${tag}</li>
+                        `)
+                    })
+    
+                    listBlock.insertAdjacentHTML('beforeend', `
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" data-setbg="${item.image}">
+                                    <div class="ep">${item.rating} / 10</div>
+                                    <div class="view"><i class="fa fa-eye"></i> ${item.views}</div>
+                                </div>
+                                <div class="product__item__text">
+                                    <ul>
+                                        ${tagsBlock.outerHTML}
+                                    </ul>
+                                    <h5><a href="/anime-details.html?itemId=${item.id}">${item.title}</a></h5>
+                                </div>
+                            </div>
+                        </div>
+                    `)
+                })
+    
+                productBlock.append(listBlock)
+                wrapper.append(productBlock)
+    
+                wrapper.querySelectorAll('.set-bg').forEach(item => {
+                    const src = item.dataset.setbg
+                    item.style.backgroundImage = `url(${src})`
+                })
             })
-
-            productBlock.append(listBlock)
-            wrapper.append(productBlock)
-
-            wrapper.querySelectorAll('.set-bg').forEach(item => {
-                const src = item.dataset.setbg
-                item.style.backgroundImage = `url(${src})`
-            })
-        })
+        }
     }
 
     const renderTopAnime = (array) => {
         const wrapper = document.querySelector('.filter__gallery')
 
         if (wrapper) {
-            wrapper.innerHTML = ''
             array.forEach(item => {
-                wrapper.insertAdjacentHTML('afterbegin', `
+                wrapper.insertAdjacentHTML('beforeend', `
                     <div class="product__sidebar__view__item set-bg mix"
                         data-setbg="${item.image}">
                         <div class="ep">${item.rating} / ?</div>
@@ -2756,13 +2779,41 @@ const mainData = () => {
         })
         .then((data) => {
             const ganres = new Set()
-            renderTopAnime(data.sort((a, b) => b.views - a.views).slice(0, 5));
+            const ganreParams = new URLSearchParams(window.location.search).get('ganre')
+
             data.forEach((item) => {
                 ganres.add(item.ganre)
             })
+            
+            renderTopAnime(data.sort((a, b) => b.views - a.views).slice(0, 5));
+
+            if (ganreParams) {
+                renderAnimeDetails(data,[]);
+            } else {
+                console.log('Аниме отсутствует!');
+            }
 
             renderAnimeList(data, ganres)
+            renderGanreList(ganres)
         })
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (categoriesData);
+
+/***/ }),
+
+/***/ "./src/js/mainData.js":
+/*!****************************!*\
+  !*** ./src/js/mainData.js ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const mainData = () => {
+    
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mainData);
@@ -12893,8 +12944,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modal_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modal.js */ "./src/js/modal.js");
 /* harmony import */ var _scrollToTop_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./scrollToTop.js */ "./src/js/scrollToTop.js");
 /* harmony import */ var _slider_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./slider.js */ "./src/js/slider.js");
-/* harmony import */ var _sass_style_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../sass/style.scss */ "./src/sass/style.scss");
+/* harmony import */ var _categoriesData_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./categoriesData.js */ "./src/js/categoriesData.js");
+/* harmony import */ var _sass_style_scss__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../sass/style.scss */ "./src/sass/style.scss");
 // import '../index.html'
+
 
 
 
@@ -12910,6 +12963,7 @@ __webpack_require__.r(__webpack_exports__);
 ;(0,_modal_js__WEBPACK_IMPORTED_MODULE_3__["default"])()
 ;(0,_scrollToTop_js__WEBPACK_IMPORTED_MODULE_4__["default"])()
 ;(0,_slider_js__WEBPACK_IMPORTED_MODULE_5__["default"])()
+;(0,_categoriesData_js__WEBPACK_IMPORTED_MODULE_6__["default"])()
 })();
 
 /******/ })()

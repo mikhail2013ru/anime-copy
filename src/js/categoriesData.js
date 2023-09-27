@@ -1,4 +1,7 @@
+import preloader from "./preloader.js"
+
 const categoriesData = () => {
+    const preloader = document.querySelector('.preloder')
     const renderGanreList = (ganres) => {
         const dropdownBlock = document.querySelector('.header__menu .dropdown')
 
@@ -11,14 +14,72 @@ const categoriesData = () => {
         })
     }
 
+    const renderAnimeDetails = (array, itemId) => {
+        const wrapper = document.querySelector('.anime-details')
+
+        if (wrapper) {
+            const animeObj = array.find(item => item.id == itemId)
+            const imageBlock = document.querySelector('.anime__details__pic')
+            const viewsBlock = imageBlock.querySelector('.view')
+            const titleBlock = document.querySelector('.anime__details__title h3')
+            const subtitleBlock = document.querySelector('.anime__details__title span')
+            const descriptionBlock = document.querySelector('.anime__details__text p')
+            const widgetList = document.querySelectorAll('.anime__details__widget ul li')
+            
+            console.log(itemId);
+            if (animeObj) {
+                console.log(animeObj);
+                imageBlock.dataset.setbg = animeObj.image
+                viewsBlock.insertAdjacentHTML('beforeend', `
+                    <div><i class="fa fa-eye"></i> ${animeObj.views}</div>
+                `)
+    
+                titleBlock.textContent = animeObj.title
+                subtitleBlock.textContent = animeObj['original-title']
+                descriptionBlock.textContent = animeObj.description
+    
+                widgetList[0].insertAdjacentHTML('beforeend', `
+                    <span>Date aired:</span>${animeObj.date}
+                `)
+                widgetList[1].insertAdjacentHTML('beforeend', `
+                    <span>Rating:</span> ${animeObj.rating}
+                `)
+                widgetList[2].insertAdjacentHTML('beforeend', `
+                    <span>Genre:</span> ${animeObj.tags.join(", ")}
+                `)
+    
+                document.querySelectorAll('.set-bg').forEach(item => {
+                    const src = item.dataset.setbg
+                    item.style.backgroundImage = `url(${src})`
+                })
+    
+                // setTimeout(() => {
+                //     preloader.classList.remove('active')
+                // }, 500)
+            } else {
+                console.log("Аниме отсутствует!");
+            }
+        }
+    }
+
     const renderAnimeList = (array, ganres) => {
         const wrapper = document.querySelector('.product .col-lg-8')
        
         if (wrapper) {    
+            // wrapper.addEventListener('click', (e) => {
+            //     e.preventDefault()                
+            //     console.dir(e.target)
+            //     if (e.target.classList.contains('link')) {
+            //         const itemId = new URLSearchParams(e.target.search).get('itemId')
+            //         console.log(itemId);                    
+            //     }
+            // })
+
             ganres.forEach((ganreItem) => {
                 const productBlock = document.createElement('div')
                 const listBlock = document.createElement('div')
-                const list = array.filter(item => item.ganre === ganreItem)
+                // const list = array.filter(item => item.ganre === ganreItem)
+                const list = array.filter(item => item.tags.includes(ganreItem))
     
                 listBlock.classList.add('row')
                 productBlock.classList.add('mb-5')
@@ -57,7 +118,7 @@ const categoriesData = () => {
                                     <ul>
                                         ${tagsBlock.outerHTML}
                                     </ul>
-                                    <h5><a href="/anime-details.html?itemId=${item.id}">${item.title}</a></h5>
+                                    <h5><a class="link" href="/anime-details.html?itemId=${item.id}">${item.title}</a></h5>
                                 </div>
                             </div>
                         </div>
@@ -72,6 +133,10 @@ const categoriesData = () => {
                     item.style.backgroundImage = `url(${src})`
                 })
             })
+
+            setTimeout(() => {
+                preloader.classList.remove('active')
+            }, 500)
         }
     }
 
@@ -104,13 +169,23 @@ const categoriesData = () => {
         .then((data) => {
             const ganres = new Set()
             const ganreParams = new URLSearchParams(window.location.search).get('ganre')
-            console.log(ganreParams);
+            const itemId = new URLSearchParams(window.location.search).get('itemId')
+
+            console.log(itemId);
 
             data.forEach((item) => {
                 ganres.add(item.ganre)
             })
             
             renderTopAnime(data.sort((a, b) => b.views - a.views).slice(0, 5));
+
+            if (ganreParams || itemId) {
+                renderAnimeDetails(data,[]);
+                console.log(data);
+            } else {
+                console.log('Аниме отсутствует!');
+            }
+
             renderAnimeList(data, ganres)
             renderGanreList(ganres)
         })
