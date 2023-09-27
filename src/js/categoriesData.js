@@ -180,7 +180,7 @@ const categoriesData = () => {
             renderTopAnime(data.sort((a, b) => b.views - a.views).slice(0, 5));
 
             if (ganreParams || itemId) {
-                renderAnimeDetails(data,[]);
+                renderAnimeDetails(data, [itemId]);
                 console.log(data);
             } else {
                 console.log('Аниме отсутствует!');
