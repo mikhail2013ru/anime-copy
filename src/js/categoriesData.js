@@ -1,5 +1,3 @@
-import preloader from "./preloader.js"
-
 const categoriesData = () => {
     const preloader = document.querySelector('.preloder')
     const renderGanreList = (ganres) => {
@@ -10,13 +8,106 @@ const categoriesData = () => {
                 <li>
                     <a href="./categories.html?ganre=${ganre}">${ganre}</a>
                 </li>
-            `)
+            `)            
         })
+
+    }
+
+    const renderCategoriesList = (array, ganreFilter, ganres) => {
+        const wrapper = document.querySelector('.product-page')
+        
+        if (wrapper) {
+            const colLg8 = document.querySelector('.product-page .col-lg-8')
+            const newArr = []
+            newArr.push(ganreFilter)    
+            colLg8.textContent = ''
+    
+            renderAnimeList(array, newArr)
+        }
+
+
+
+        // const sectionTitle = document.querySelectorAll('.section-title h4')
+        // console.log(sectionTitle);
+
+        // sectionTitle.forEach((item) => {
+        //     if (item.textContent == ganreFilter ) {
+        //         console.log(colLg8.contains('.mb-5'));
+        //         // if (colLg8.contains('mb-5') ) {
+        //         //     console.log(item);
+        //         // }
+        //         // dataAttr.forEach((item2) => {
+        //         //     item2.classList.add('active2')
+        //         // })
+        //     }
+        //     // console.log(item);
+        // })
+
+        // colLg8.addEventListener('click', (e) => {
+        //     if (e.target == dataAttr) {
+        //         console.log(e.target);
+
+        //     }
+        // })
+        
+        // dataAttr.forEach((item) => {
+        //     ganres.forEach((itemAtr) => {
+        //         console.log(itemAtr);
+        //         item.dataset.ganre = `${itemAtr}`
+
+        //     })
+        // })
+
+        // productBlock.forEach((item) => {
+        //     item.dataset.ganre = `${ganres}`
+        //     // console.log(item);
+        // })
+        // const categoriesPage = document.querySelector('.product-wrapper')
+        // console.log(categoriesPage);
+
+        // if (wrapper) {
+        //     const ganreList = array.filter((item) => {
+        //         return item.ganre === ganreFilter
+        //     })
+        // }
+    }
+
+    const categories = (ganre) => {
+        const wrapper = document.querySelector('.breadcrumb-option')
+        if ((wrapper) && !wrapper.classList.contains('breadcrumb-categories')) {
+            const breadcrumb = document.querySelector('.breadcrumb__links a')
+            
+            if (ganre === null) {
+                breadcrumb.insertAdjacentHTML('afterend', `
+                    <span>Categories</span>
+                `)
+            } else {                    
+                breadcrumb.insertAdjacentHTML('afterend', `
+                    <span>${ganre}</span>
+                `)
+            }               
+        }
+    }
+    
+    const animeDetails = (ganre) => {
+        console.log(ganre);
+        const wrapper = document.querySelector('.breadcrumb-categories')
+        const breadcrumb = document.querySelector('.breadcrumb__links')
+        if (wrapper) {
+            breadcrumb.insertAdjacentHTML('afterbegin', `
+                <a href="./index.html"><i class="fa fa-home"></i> Home</a>
+                <a href="./categories.html">Categories</a>
+                <span>${ganre}</span>
+            `)
+        }
+
+        // <a href="./categories.html">Categories</a>
+        // <span>Romance</span>
     }
 
     const renderAnimeDetails = (array, itemId) => {
-        const wrapper = document.querySelector('.anime-details')
-
+        const wrapper = document.querySelector('.anime-details')        
+        
         if (wrapper) {
             const animeObj = array.find(item => item.id == itemId)
             const imageBlock = document.querySelector('.anime__details__pic')
@@ -24,9 +115,8 @@ const categoriesData = () => {
             const titleBlock = document.querySelector('.anime__details__title h3')
             const subtitleBlock = document.querySelector('.anime__details__title span')
             const descriptionBlock = document.querySelector('.anime__details__text p')
-            const widgetList = document.querySelectorAll('.anime__details__widget ul li')
+            const widgetList = document.querySelectorAll('.anime__details__widget ul li')            
             
-            console.log(itemId);
             if (animeObj) {
                 console.log(animeObj);
                 imageBlock.dataset.setbg = animeObj.image
@@ -63,19 +153,12 @@ const categoriesData = () => {
     }
 
     const renderAnimeList = (array, ganres) => {
-        const wrapper = document.querySelector('.product .col-lg-8')
-       
+        // console.log(array);
+        console.log(ganres);
+        const wrapper = document.querySelector('.product .col-lg-8')       
         if (wrapper) {    
-            // wrapper.addEventListener('click', (e) => {
-            //     e.preventDefault()                
-            //     console.dir(e.target)
-            //     if (e.target.classList.contains('link')) {
-            //         const itemId = new URLSearchParams(e.target.search).get('itemId')
-            //         console.log(itemId);                    
-            //     }
-            // })
-
             ganres.forEach((ganreItem) => {
+                console.log(ganreItem);
                 const productBlock = document.createElement('div')
                 const listBlock = document.createElement('div')
                 // const list = array.filter(item => item.ganre === ganreItem)
@@ -181,13 +264,15 @@ const categoriesData = () => {
 
             if (ganreParams || itemId) {
                 renderAnimeDetails(data, [itemId]);
-                // console.log(data);
             } else {
                 console.log('Аниме отсутствует!');
             }
 
             renderAnimeList(data, ganres)
             renderGanreList(ganres)
+            categories(ganreParams)
+            animeDetails([])
+            renderCategoriesList(data, ganreParams, ganres)
         })
 }
 

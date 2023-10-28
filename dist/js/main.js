@@ -2669,9 +2669,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _preloader_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./preloader.js */ "./src/js/preloader.js");
-
-
 const categoriesData = () => {
     const preloader = document.querySelector('.preloder')
     const renderGanreList = (ganres) => {
@@ -2682,13 +2679,74 @@ const categoriesData = () => {
                 <li>
                     <a href="./categories.html?ganre=${ganre}">${ganre}</a>
                 </li>
-            `)
+            `)            
         })
+
+    }
+
+    const renderCategoriesList = (array, ganreFilter, ganres) => {
+        // const wrapper = document.querySelector('.product-page')
+        const dataAttr = document.querySelectorAll('.product-page .mb-5')
+        
+        // dataAttr.forEach((item) => {
+        //     ganres.forEach((itemAtr) => {
+        //         console.log(itemAtr);
+        //         item.dataset.ganre = `${itemAtr}`
+
+        //     })
+        // })
+
+        // productBlock.forEach((item) => {
+        //     item.dataset.ganre = `${ganres}`
+        //     // console.log(item);
+        // })
+        // wrapper.innerHTML = ''
+        // const categoriesPage = document.querySelector('.product-wrapper')
+        // console.log(categoriesPage);
+
+        // if (wrapper) {
+        //     const ganreList = array.filter((item) => {
+        //         return item.ganre === ganreFilter
+        //     })
+        // }
+    }
+
+    const categories = (ganre) => {
+        const wrapper = document.querySelector('.breadcrumb-option')
+        if ((wrapper) && !wrapper.classList.contains('breadcrumb-categories')) {
+            const breadcrumb = document.querySelector('.breadcrumb__links a')
+            
+            if (ganre === null) {
+                breadcrumb.insertAdjacentHTML('afterend', `
+                    <span>Categories</span>
+                `)
+            } else {                    
+                breadcrumb.insertAdjacentHTML('afterend', `
+                    <span>${ganre}</span>
+                `)
+            }               
+        }
+    }
+    
+    const animeDetails = (ganre) => {
+        console.log(ganre);
+        const wrapper = document.querySelector('.breadcrumb-categories')
+        const breadcrumb = document.querySelector('.breadcrumb__links')
+        if (wrapper) {
+            breadcrumb.insertAdjacentHTML('afterbegin', `
+                <a href="./index.html"><i class="fa fa-home"></i> Home</a>
+                <a href="./categories.html">Categories</a>
+                <span>${ganre}</span>
+            `)
+        }
+
+        // <a href="./categories.html">Categories</a>
+        // <span>Romance</span>
     }
 
     const renderAnimeDetails = (array, itemId) => {
-        const wrapper = document.querySelector('.anime-details')
-
+        const wrapper = document.querySelector('.anime-details')        
+        
         if (wrapper) {
             const animeObj = array.find(item => item.id == itemId)
             const imageBlock = document.querySelector('.anime__details__pic')
@@ -2696,9 +2754,8 @@ const categoriesData = () => {
             const titleBlock = document.querySelector('.anime__details__title h3')
             const subtitleBlock = document.querySelector('.anime__details__title span')
             const descriptionBlock = document.querySelector('.anime__details__text p')
-            const widgetList = document.querySelectorAll('.anime__details__widget ul li')
+            const widgetList = document.querySelectorAll('.anime__details__widget ul li')            
             
-            console.log(itemId);
             if (animeObj) {
                 console.log(animeObj);
                 imageBlock.dataset.setbg = animeObj.image
@@ -2735,19 +2792,10 @@ const categoriesData = () => {
     }
 
     const renderAnimeList = (array, ganres) => {
-        const wrapper = document.querySelector('.product .col-lg-8')
-       
+        const wrapper = document.querySelector('.product .col-lg-8')       
         if (wrapper) {    
-            // wrapper.addEventListener('click', (e) => {
-            //     e.preventDefault()                
-            //     console.dir(e.target)
-            //     if (e.target.classList.contains('link')) {
-            //         const itemId = new URLSearchParams(e.target.search).get('itemId')
-            //         console.log(itemId);                    
-            //     }
-            // })
-
             ganres.forEach((ganreItem) => {
+                console.log(ganreItem);
                 const productBlock = document.createElement('div')
                 const listBlock = document.createElement('div')
                 // const list = array.filter(item => item.ganre === ganreItem)
@@ -2843,7 +2891,7 @@ const categoriesData = () => {
             const ganreParams = new URLSearchParams(window.location.search).get('ganre')
             const itemId = new URLSearchParams(window.location.search).get('itemId')
 
-            // console.log(itemId);
+            console.log(ganreParams);
 
             data.forEach((item) => {
                 ganres.add(item.ganre)
@@ -2853,13 +2901,15 @@ const categoriesData = () => {
 
             if (ganreParams || itemId) {
                 renderAnimeDetails(data, [itemId]);
-                console.log(data);
             } else {
                 console.log('Аниме отсутствует!');
             }
 
             renderAnimeList(data, ganres)
             renderGanreList(ganres)
+            categories(ganreParams)
+            animeDetails([])
+            renderCategoriesList(data, ganreParams, ganres)
         })
 }
 
@@ -2906,6 +2956,18 @@ const modal = () => {
     wrapper.style.width = '100%'
     wrapper.style.maxWidth = '500px'
 
+    const debounce = (func, ms = 300) => {
+        let timer
+        return (...args) => {
+            clearTimeout(timer)
+            timer = setTimeout(() => {func.apply(undefined, args)}, ms)
+        }
+    }
+
+    const searchDebounce = debounce((searchString) => {
+        searchFunc(searchString)
+    }, 1000)
+
     const renderFunc = (items) => {
         wrapper.innerHTML = ''
 
@@ -2943,7 +3005,8 @@ const modal = () => {
     })
 
     searchInput.addEventListener('input', (e) => {
-        searchFunc(e.target.value)
+        // searchFunc(e.target.value)
+        searchDebounce(e.target.value)
     })
 }
 
