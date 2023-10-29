@@ -18,58 +18,14 @@ const categoriesData = () => {
         
         if (wrapper) {
             const colLg8 = document.querySelector('.product-page .col-lg-8')
-            const newArr = []
-            newArr.push(ganreFilter)    
-            colLg8.textContent = ''
-    
-            renderAnimeList(array, newArr)
+            const newGanre = []
+            if (ganreFilter) {
+                newGanre.push(ganreFilter)   
+                
+                colLg8.textContent = ''
+                renderAnimeList(array, newGanre)
+            }
         }
-
-
-
-        // const sectionTitle = document.querySelectorAll('.section-title h4')
-        // console.log(sectionTitle);
-
-        // sectionTitle.forEach((item) => {
-        //     if (item.textContent == ganreFilter ) {
-        //         console.log(colLg8.contains('.mb-5'));
-        //         // if (colLg8.contains('mb-5') ) {
-        //         //     console.log(item);
-        //         // }
-        //         // dataAttr.forEach((item2) => {
-        //         //     item2.classList.add('active2')
-        //         // })
-        //     }
-        //     // console.log(item);
-        // })
-
-        // colLg8.addEventListener('click', (e) => {
-        //     if (e.target == dataAttr) {
-        //         console.log(e.target);
-
-        //     }
-        // })
-        
-        // dataAttr.forEach((item) => {
-        //     ganres.forEach((itemAtr) => {
-        //         console.log(itemAtr);
-        //         item.dataset.ganre = `${itemAtr}`
-
-        //     })
-        // })
-
-        // productBlock.forEach((item) => {
-        //     item.dataset.ganre = `${ganres}`
-        //     // console.log(item);
-        // })
-        // const categoriesPage = document.querySelector('.product-wrapper')
-        // console.log(categoriesPage);
-
-        // if (wrapper) {
-        //     const ganreList = array.filter((item) => {
-        //         return item.ganre === ganreFilter
-        //     })
-        // }
     }
 
     const categories = (ganre) => {
@@ -106,7 +62,9 @@ const categoriesData = () => {
     }
 
     const renderAnimeDetails = (array, itemId) => {
-        const wrapper = document.querySelector('.anime-details')        
+        const wrapper = document.querySelector('.anime-details')   
+        console.log(array);     
+        console.log(itemId);     
         
         if (wrapper) {
             const animeObj = array.find(item => item.id == itemId)
@@ -254,7 +212,7 @@ const categoriesData = () => {
             const ganreParams = new URLSearchParams(window.location.search).get('ganre')
             const itemId = new URLSearchParams(window.location.search).get('itemId')
 
-            console.log(ganreParams);
+            console.log(data);
 
             data.forEach((item) => {
                 ganres.add(item.ganre)
@@ -274,6 +232,11 @@ const categoriesData = () => {
             animeDetails([])
             renderCategoriesList(data, ganreParams, ganres)
         })
+
+    return renderAnimeDetails
 }
 
+// export const { renderAnimeDetails } = categoriesData()
+const renderAnimeDetails = categoriesData()
+export { renderAnimeDetails }
 export default categoriesData

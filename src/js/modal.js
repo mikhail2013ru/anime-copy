@@ -1,3 +1,5 @@
+import { renderAnimeDetails } from "./categoriesData"
+
 const modal = () => {
     const modal = document.querySelector('.search-model')
     const modalBtn = document.querySelector('.icon_search')
@@ -18,16 +20,35 @@ const modal = () => {
 
     const searchDebounce = debounce((searchString) => {
         searchFunc(searchString)
+        console.log(searchString);
     }, 1000)
 
     const renderFunc = (items) => {
         wrapper.innerHTML = ''
-
+        
         items.forEach(item => {
+            console.log(item.id);
             wrapper.insertAdjacentHTML('afterbegin', `
-                <a class="p-2" href="/anime-details.html" target="_blank">${item.title}</a>
+            <a class="p-2" href="/anime-details.html?itemId=${item.id}" target="_blank">${item.title}</a>
             `)
+            let p2 = document.querySelector('.p-2')
+            const itemId = new URLSearchParams(p2.search).get('itemId')
+            renderAnimeDetails(items, [itemId])
+            
+            // p2.addEventListener('click', (e) => {
+            //     // e.preventDefault()
+            //     console.log(itemId);
+            //     // console.dir(document.querySelector('.p-2').search);
+            //     // const itemId = new URLSearchParams(window.location.search).get('itemId')
+
+            // })
+            
+            // if (item.id) {
+            //     renderAnimeDetails(items, [itemId])
+            // }
         });
+        
+
     }
 
     const searchFunc = (searchStr) => {
@@ -42,6 +63,8 @@ const modal = () => {
                 
                 const result = filteredData.slice(0, 5)    
                 renderFunc(result)
+
+                // console.log(result);
             })
     }
 
@@ -59,6 +82,7 @@ const modal = () => {
     searchInput.addEventListener('input', (e) => {
         // searchFunc(e.target.value)
         searchDebounce(e.target.value)
+        // console.log(e.target.value);
     })
 }
 

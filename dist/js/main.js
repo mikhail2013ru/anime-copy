@@ -2667,7 +2667,8 @@ const bgElements = () => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   renderAnimeDetails: () => (/* binding */ renderAnimeDetails)
 /* harmony export */ });
 const categoriesData = () => {
     const preloader = document.querySelector('.preloder')
@@ -2685,30 +2686,18 @@ const categoriesData = () => {
     }
 
     const renderCategoriesList = (array, ganreFilter, ganres) => {
-        // const wrapper = document.querySelector('.product-page')
-        const dataAttr = document.querySelectorAll('.product-page .mb-5')
+        const wrapper = document.querySelector('.product-page')
         
-        // dataAttr.forEach((item) => {
-        //     ganres.forEach((itemAtr) => {
-        //         console.log(itemAtr);
-        //         item.dataset.ganre = `${itemAtr}`
-
-        //     })
-        // })
-
-        // productBlock.forEach((item) => {
-        //     item.dataset.ganre = `${ganres}`
-        //     // console.log(item);
-        // })
-        // wrapper.innerHTML = ''
-        // const categoriesPage = document.querySelector('.product-wrapper')
-        // console.log(categoriesPage);
-
-        // if (wrapper) {
-        //     const ganreList = array.filter((item) => {
-        //         return item.ganre === ganreFilter
-        //     })
-        // }
+        if (wrapper) {
+            const colLg8 = document.querySelector('.product-page .col-lg-8')
+            const newGanre = []
+            if (ganreFilter) {
+                newGanre.push(ganreFilter)   
+                
+                colLg8.textContent = ''
+                renderAnimeList(array, newGanre)
+            }
+        }
     }
 
     const categories = (ganre) => {
@@ -2745,7 +2734,8 @@ const categoriesData = () => {
     }
 
     const renderAnimeDetails = (array, itemId) => {
-        const wrapper = document.querySelector('.anime-details')        
+        const wrapper = document.querySelector('.anime-details')   
+        console.log(itemId);     
         
         if (wrapper) {
             const animeObj = array.find(item => item.id == itemId)
@@ -2792,6 +2782,8 @@ const categoriesData = () => {
     }
 
     const renderAnimeList = (array, ganres) => {
+        // console.log(array);
+        console.log(ganres);
         const wrapper = document.querySelector('.product .col-lg-8')       
         if (wrapper) {    
             ganres.forEach((ganreItem) => {
@@ -2911,8 +2903,11 @@ const categoriesData = () => {
             animeDetails([])
             renderCategoriesList(data, ganreParams, ganres)
         })
+
+    return renderAnimeDetails
 }
 
+const { renderAnimeDetails } = categoriesData()
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (categoriesData);
 
 /***/ }),
@@ -2946,6 +2941,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _categoriesData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./categoriesData */ "./src/js/categoriesData.js");
+
+
 const modal = () => {
     const modal = document.querySelector('.search-model')
     const modalBtn = document.querySelector('.icon_search')
@@ -2966,6 +2964,7 @@ const modal = () => {
 
     const searchDebounce = debounce((searchString) => {
         searchFunc(searchString)
+        console.log(searchString);
     }, 1000)
 
     const renderFunc = (items) => {
@@ -2975,6 +2974,8 @@ const modal = () => {
             wrapper.insertAdjacentHTML('afterbegin', `
                 <a class="p-2" href="/anime-details.html" target="_blank">${item.title}</a>
             `)
+
+            ;(0,_categoriesData__WEBPACK_IMPORTED_MODULE_0__.renderAnimeDetails)(item, item.id)
         });
     }
 
@@ -2990,6 +2991,8 @@ const modal = () => {
                 
                 const result = filteredData.slice(0, 5)    
                 renderFunc(result)
+
+                // console.log(result);
             })
     }
 
@@ -3007,6 +3010,7 @@ const modal = () => {
     searchInput.addEventListener('input', (e) => {
         // searchFunc(e.target.value)
         searchDebounce(e.target.value)
+        // console.log(e.target.value);
     })
 }
 
@@ -13072,8 +13076,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modal_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modal.js */ "./src/js/modal.js");
 /* harmony import */ var _scrollToTop_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./scrollToTop.js */ "./src/js/scrollToTop.js");
 /* harmony import */ var _slider_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./slider.js */ "./src/js/slider.js");
-/* harmony import */ var _categoriesData_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./categoriesData.js */ "./src/js/categoriesData.js");
-/* harmony import */ var _sass_style_scss__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../sass/style.scss */ "./src/sass/style.scss");
+/* harmony import */ var _sass_style_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../sass/style.scss */ "./src/sass/style.scss");
 // import '../index.html'
 
 
@@ -13082,7 +13085,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
+// import categoriesData from './categoriesData.js'
 
 
 (0,_bg_elements_js__WEBPACK_IMPORTED_MODULE_0__["default"])()
@@ -13091,7 +13094,7 @@ __webpack_require__.r(__webpack_exports__);
 ;(0,_modal_js__WEBPACK_IMPORTED_MODULE_3__["default"])()
 ;(0,_scrollToTop_js__WEBPACK_IMPORTED_MODULE_4__["default"])()
 ;(0,_slider_js__WEBPACK_IMPORTED_MODULE_5__["default"])()
-;(0,_categoriesData_js__WEBPACK_IMPORTED_MODULE_6__["default"])()
+// categoriesData()
 })();
 
 /******/ })()
