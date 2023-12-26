@@ -50,6 +50,7 @@ const categoriesData = () => {
         const wrapper = document.querySelector('.breadcrumb-categories')
         const breadcrumb = document.querySelector('.breadcrumb__links')
         if (wrapper) {
+            console.log(ganre);
             breadcrumb.insertAdjacentHTML('afterbegin', `
                 <a href="./index.html"><i class="fa fa-home"></i> Home</a>
                 <a href="./categories.html">Categories</a>
@@ -191,7 +192,7 @@ const categoriesData = () => {
                         data-setbg="${item.image}">
                         <div class="ep">${item.rating} / ?</div>
                         <div class="view"><i class="fa fa-eye"></i> ${item.views}</div>
-                        <h5><a href="/anime-details.html">${item.title}</a></h5>
+                        <h5><a href="/anime-details.html?itemId=${item.id}">${item.title}</a></h5>
                     </div>
                 `)
             });
@@ -211,8 +212,9 @@ const categoriesData = () => {
             const ganres = new Set()
             const ganreParams = new URLSearchParams(window.location.search).get('ganre')
             const itemId = new URLSearchParams(window.location.search).get('itemId')
+            // const categories = new URLSearchParams(window.location.search).get('ganre')
 
-            console.log(data);
+            console.log(ganreParams);
 
             data.forEach((item) => {
                 ganres.add(item.ganre)

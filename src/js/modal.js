@@ -34,18 +34,6 @@ const modal = () => {
             let p2 = document.querySelector('.p-2')
             const itemId = new URLSearchParams(p2.search).get('itemId')
             renderAnimeDetails(items, [itemId])
-            
-            // p2.addEventListener('click', (e) => {
-            //     // e.preventDefault()
-            //     console.log(itemId);
-            //     // console.dir(document.querySelector('.p-2').search);
-            //     // const itemId = new URLSearchParams(window.location.search).get('itemId')
-
-            // })
-            
-            // if (item.id) {
-            //     renderAnimeDetails(items, [itemId])
-            // }
         });
         
 

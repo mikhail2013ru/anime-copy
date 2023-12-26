@@ -2735,6 +2735,7 @@ const categoriesData = () => {
 
     const renderAnimeDetails = (array, itemId) => {
         const wrapper = document.querySelector('.anime-details')   
+        console.log(array);     
         console.log(itemId);     
         
         if (wrapper) {
@@ -2883,7 +2884,7 @@ const categoriesData = () => {
             const ganreParams = new URLSearchParams(window.location.search).get('ganre')
             const itemId = new URLSearchParams(window.location.search).get('itemId')
 
-            console.log(ganreParams);
+            console.log(data);
 
             data.forEach((item) => {
                 ganres.add(item.ganre)
@@ -2907,7 +2908,9 @@ const categoriesData = () => {
     return renderAnimeDetails
 }
 
-const { renderAnimeDetails } = categoriesData()
+// export const { renderAnimeDetails } = categoriesData()
+const renderAnimeDetails = categoriesData()
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (categoriesData);
 
 /***/ }),
@@ -2969,14 +2972,18 @@ const modal = () => {
 
     const renderFunc = (items) => {
         wrapper.innerHTML = ''
-
+        
         items.forEach(item => {
+            console.log(item.id);
             wrapper.insertAdjacentHTML('afterbegin', `
-                <a class="p-2" href="/anime-details.html" target="_blank">${item.title}</a>
+            <a class="p-2" href="/anime-details.html?itemId=${item.id}" target="_blank">${item.title}</a>
             `)
-
-            ;(0,_categoriesData__WEBPACK_IMPORTED_MODULE_0__.renderAnimeDetails)(item, item.id)
+            let p2 = document.querySelector('.p-2')
+            const itemId = new URLSearchParams(p2.search).get('itemId')
+            ;(0,_categoriesData__WEBPACK_IMPORTED_MODULE_0__.renderAnimeDetails)(items, [itemId])
         });
+        
+
     }
 
     const searchFunc = (searchStr) => {
